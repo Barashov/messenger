@@ -1,10 +1,24 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    
     <meta charset="UTF-8">
-    <title>Title</title>
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Messanger</title>
+    <link rel="stylesheet" href='{% static "css/index.css" %}'>
+    
 </head>
 <body>
-    hello
+    <div class="main_page"></div>
+    <div class="navbar">
+        <button class="btn">Users</button>
+        <button class="btn">Chats</button>
+        <button class="btn">Profile</button>  
+      </div>
+    <script src='{% static "js/router.js" %}' type='module'></script>
+    <script src='{% static "js/pages.js" %}' type='module'></script>
+    <script src='{% static "js/index.js" %}' type='module'></script>
 </body>
 </html>
