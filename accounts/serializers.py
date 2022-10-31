@@ -6,7 +6,7 @@ class UserSerializer(serializers.Serializer):
     """
     serializer для создания пользователя
     """
-    username = serializers.CharField()
+    username = serializers.CharField(max_length=20)
     password = serializers.CharField(write_only=True)
 
     def create(self, validated_data):
