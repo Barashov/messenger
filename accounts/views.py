@@ -2,15 +2,15 @@ import json
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from .serializers import UserSerializer
+from .serializers import UserSerializer, ProfileSerializer
 from .logics import UserLogic
+from .models import User
 
 
 class UserCreateView(APIView):
     """
-    view для создания пользователя
+    представление для создания пользователя
     """
-
     def post(self, request):
         serializer = UserSerializer(data=request.data)
         if serializer.is_valid(raise_exception=True):
@@ -29,3 +29,9 @@ class CheckUsernameExists(APIView):
     def get(self, request, username):
         is_username_taken = UserLogic.is_user_exist(username)
         return Response(status=200, data={'is_username_taken': is_username_taken})
+
+
+class UserProfileView(APIView):
+    def get(self, request):
+        user = ProfileSerializer(request.user)
+        return Response(user.data)
