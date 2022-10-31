@@ -13,12 +13,14 @@ function hide_navbar() {
 
 class BasePage {
     page = `<h1>page render() function not found</h1>`;
+    get_information() {} // функция для получения информации до отображения страницы
     render() {
         main_page.innerHTML = this.page;
     }
     other_functions() {} // другие функции
 }
 
+// страница регистрации
 class RegistrationPage extends BasePage {
     page = `<input name='username' type='text' id='username' maxlength="20">
             <h6 id='user_error'></h6>
@@ -114,13 +116,25 @@ class RegistrationPage extends BasePage {
     }
 }
 
-/**
-class Main extends BasePage {
-    page = 'hello'; // html код
+// страница профиля
+class ProfilePage extends BasePage {
+    
+    render() {
+        let url = 'users/profile/'
+        let request = new XMLHttpRequest
+        request.open('GET', url, true)
+        request.send()
+        request.onload = (event) => {
+            let json_data = JSON.parse(request.responseText) // данные профиля
+            console.log(json_data.friends[0].username)
+            main_page.innerHTML = `username: ${json_data.username}
+                                    <br>
+                                   <img src="${json_data.photo}" alt="Italian Trulli">`      
+        }
+    }
     other_functions() {
-        hide_navbar()
+        main_page.innerHTML = 'загрузка'
     }
 }
- */
 
-export {BasePage, RegistrationPage} //export {BasePage, Main}
+export {BasePage, RegistrationPage, ProfilePage} //export {BasePage, Main}
