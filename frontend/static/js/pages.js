@@ -136,4 +136,29 @@ class ProfilePage extends BasePage {
     }
 }
 
-export {BasePage, RegistrationPage, ProfilePage} //export {BasePage, Main}
+// страница входа 
+class LoginPage extends BasePage {
+    page = `<input type='text' id='username' maxlength="20">
+            <br>
+            <input type='password' id='psw'>
+            <br>
+            <button id='btn'>Войти</button>`
+    other_functions() {
+        let username = document.getElementById('username')
+        let password = document.getElementById('psw')
+        let button = document.getElementById('btn')
+        button.onclick = () => {
+            let request = new XMLHttpRequest()
+            let json_data = JSON.stringify({'username': username.value,
+                                            'password': password.value})
+            request.open('POST', 'users/login/', true)
+            request.setRequestHeader('Content-type', 'application/json', 'charset=UTF-8')
+            request.send(json_data)
+            request.onload = () => {
+                location.hash = '#profile'
+            }
+        }
+    }
+}
+
+export {BasePage, RegistrationPage, ProfilePage, LoginPage}

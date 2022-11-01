@@ -4,6 +4,7 @@ let routers = {
   '#base': pages.BasePage,
   '#registration': pages.RegistrationPage,
   '#profile': pages.ProfilePage,
+  '#login': pages.LoginPage,
 }
 
 function hash_change() {
