@@ -126,7 +126,6 @@ class ProfilePage extends BasePage {
         request.send()
         request.onload = (event) => {
             let json_data = JSON.parse(request.responseText) // данные профиля
-            console.log(json_data.friends[0].username)
             main_page.innerHTML = `username: ${json_data.username}
                                     <br>
                                    <img src="${json_data.photo}" alt="Italian Trulli">`      
