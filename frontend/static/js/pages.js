@@ -1,6 +1,6 @@
 let main_page = document.querySelector('.main_page');
 let navbar = document.querySelector('.navbar');
-
+let TOKEN = null;
 function show_navbar() {
     // показ панели навигации
     navbar.style.visibility = 'visible';
@@ -13,11 +13,11 @@ function hide_navbar() {
 
 class BasePage {
     page = `<h1>page render() function not found</h1>`;
-    get_information() {} // функция для получения информации до отображения страницы
+    get_information() { } // функция для получения информации до отображения страницы
     render() {
         main_page.innerHTML = this.page;
     }
-    other_functions() {} // другие функции
+    other_functions() { } // другие функции
 }
 
 // страница регистрации
@@ -72,13 +72,13 @@ class RegistrationPage extends BasePage {
 
         function username_validation() { // проверка имени пользователя
             let request = new XMLHttpRequest()
-            request.open('GET', `/users/username-taken/${username.value}/`, true)
+            request.open('GET', `api/v1/users/username-taken/${username.value}/`, true)
             request.send()
             console.log()
             request.onreadystatechange = () => {
                 if (request.responseText) {
                     let json_data = JSON.parse(request.responseText)
-                    if (json_data.is_username_taken == true) { 
+                    if (json_data.is_username_taken == true) {
                         username_is_valid = false
                         username.style.borderColor = 'red'
                         username_error.textContent = 'имя занято'
@@ -88,10 +88,10 @@ class RegistrationPage extends BasePage {
                         username.style.borderColor = 'green'
                         username_error.textContent = 'все хорошо'
                     }
-                }     
+                }
             }
         }
-        username.onchange = username_validation 
+        username.onchange = username_validation
         psw_1.addEventListener('input', () => {
             password_matching_check()
             password_validation()
@@ -101,14 +101,32 @@ class RegistrationPage extends BasePage {
         let button = document.getElementById('submit')
         button.onclick = () => {
             if (password_is_valid == true && passwords_match == true && username_is_valid == true) {
-                let url = 'users/user/'
-                let json_data = JSON.stringify({'username': username.value, 'password': psw_1.value})
+                let url = '/api/v1/auth/users/'
+                let json_data = JSON.stringify({ 'username': username.value, 'password': psw_1.value })
                 let request = new XMLHttpRequest
                 request.open('POST', url, true)
                 request.setRequestHeader('Content-type', 'application/json', 'charset=UTF-8')
                 request.send(json_data)
-                request.onreadystatechange = () => {
-                    location.hash = '#profile'
+                request.onload = () => {
+                    let request = new XMLHttpRequest()
+                    let json_data = JSON.stringify({
+                        'username': username.value,
+                        'password': psw_1.value
+                        })
+                    request.open('POST', 'auth/token/login', true)
+                    request.setRequestHeader('Content-type', 'application/json', 'charset=UTF-8')
+                    request.send(json_data)
+                    request.onload = () => {
+                        if (request.status == 400) {
+                            console.log('неправильный логин или пароль')
+                        }
+                        else if (request.status == 200) {
+                            let json_token = JSON.parse(request.responseText)
+                            TOKEN = json_token.auth_token
+                            location.hash = '#profile'
+                            show_navbar()
+                        }
+                    }
                 }
             }
         }
@@ -118,17 +136,18 @@ class RegistrationPage extends BasePage {
 
 // страница профиля
 class ProfilePage extends BasePage {
-    
+
     render() {
-        let url = 'users/profile/'
+        let url = 'api/v1/users/profile/'
         let request = new XMLHttpRequest
         request.open('GET', url, true)
+        request.setRequestHeader('Authorization', `Token ${TOKEN}`)
         request.send()
         request.onload = (event) => {
             let json_data = JSON.parse(request.responseText) // данные профиля
             main_page.innerHTML = `username: ${json_data.username}
                                     <br>
-                                   <img src="${json_data.photo}" alt="Italian Trulli">`      
+                                   <img src="${json_data.photo}" alt="Italian Trulli">`
         }
     }
     other_functions() {
@@ -144,21 +163,32 @@ class LoginPage extends BasePage {
             <br>
             <button id='btn'>Войти</button>`
     other_functions() {
+        hide_navbar()
         let username = document.getElementById('username')
         let password = document.getElementById('psw')
         let button = document.getElementById('btn')
         button.onclick = () => {
             let request = new XMLHttpRequest()
-            let json_data = JSON.stringify({'username': username.value,
-                                            'password': password.value})
-            request.open('POST', 'users/login/', true)
+            let json_data = JSON.stringify({
+                'username': username.value,
+                'password': password.value
+            })
+            request.open('POST', 'auth/token/login', true)
             request.setRequestHeader('Content-type', 'application/json', 'charset=UTF-8')
             request.send(json_data)
             request.onload = () => {
-                location.hash = '#profile'
+                if (request.status == 400) {
+                    console.log('неправильный логин или пароль')
+                }
+                else if (request.status == 200) {
+                    let json_token = JSON.parse(request.responseText)
+                    TOKEN = json_token.auth_token
+                    location.hash = '#profile'
+                    show_navbar()
+                }
             }
         }
     }
 }
 
-export {BasePage, RegistrationPage, ProfilePage, LoginPage}
+export { BasePage, RegistrationPage, ProfilePage, LoginPage }
