@@ -3,12 +3,14 @@ import * as pages from './pages.js'
 let routers = {
   '#base': pages.BasePage,
   '#registration': pages.RegistrationPage,
-  //'#main': pages.Main,
+  '#profile': pages.ProfilePage,
+  '#login': pages.LoginPage,
 }
 
 function hash_change() {
     let hash = document.location.hash
     let object = new routers[hash]()
+    object.get_information()
     object.render()
     object.other_functions()
 }

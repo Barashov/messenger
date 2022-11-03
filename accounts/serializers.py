@@ -19,3 +19,24 @@ class UserSerializer(serializers.Serializer):
     class Meta:
         model = User
         fields = ('id', 'username', 'password')
+
+
+class FriendsSerializer(serializers.Serializer):
+    id = serializers.IntegerField()
+    username = serializers.CharField()
+    photo = serializers.FileField()
+
+    class Meta:
+        model = User
+        fields = ('id', 'username', 'photo')
+
+
+class ProfileSerializer(serializers.Serializer):
+    username = serializers.CharField()
+    photo = serializers.FileField()
+    friends = FriendsSerializer(many=True, read_only=True)
+    phone_number = serializers.IntegerField()
+
+    class Meta:
+        model = User
+        fields = ('username', 'photo', 'friends', 'phone_number')

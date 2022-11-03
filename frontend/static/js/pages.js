@@ -13,12 +13,14 @@ function hide_navbar() {
 
 class BasePage {
     page = `<h1>page render() function not found</h1>`;
+    get_information() {} // функция для получения информации до отображения страницы
     render() {
         main_page.innerHTML = this.page;
     }
     other_functions() {} // другие функции
 }
 
+// страница регистрации
 class RegistrationPage extends BasePage {
     page = `<input name='username' type='text' id='username' maxlength="20">
             <h6 id='user_error'></h6>
@@ -114,13 +116,49 @@ class RegistrationPage extends BasePage {
     }
 }
 
-/**
-class Main extends BasePage {
-    page = 'hello'; // html код
+// страница профиля
+class ProfilePage extends BasePage {
+    
+    render() {
+        let url = 'users/profile/'
+        let request = new XMLHttpRequest
+        request.open('GET', url, true)
+        request.send()
+        request.onload = (event) => {
+            let json_data = JSON.parse(request.responseText) // данные профиля
+            main_page.innerHTML = `username: ${json_data.username}
+                                    <br>
+                                   <img src="${json_data.photo}" alt="Italian Trulli">`      
+        }
+    }
     other_functions() {
-        hide_navbar()
+        main_page.innerHTML = 'загрузка'
     }
 }
- */
 
-export {BasePage, RegistrationPage} //export {BasePage, Main}
+// страница входа 
+class LoginPage extends BasePage {
+    page = `<input type='text' id='username' maxlength="20">
+            <br>
+            <input type='password' id='psw'>
+            <br>
+            <button id='btn'>Войти</button>`
+    other_functions() {
+        let username = document.getElementById('username')
+        let password = document.getElementById('psw')
+        let button = document.getElementById('btn')
+        button.onclick = () => {
+            let request = new XMLHttpRequest()
+            let json_data = JSON.stringify({'username': username.value,
+                                            'password': password.value})
+            request.open('POST', 'users/login/', true)
+            request.setRequestHeader('Content-type', 'application/json', 'charset=UTF-8')
+            request.send(json_data)
+            request.onload = () => {
+                location.hash = '#profile'
+            }
+        }
+    }
+}
+
+export {BasePage, RegistrationPage, ProfilePage, LoginPage}
