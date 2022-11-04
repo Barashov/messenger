@@ -221,7 +221,7 @@ export class ChatCreatePage extends BasePage {
                     data.append('description', description.value)
                 }
                 let request = new XMLHttpRequest()
-                let url = '/api/v1/chats/chat/'
+                let url = '/api/v1/chats/chats/'
                 request.open('POST', url, true)
                 request.setRequestHeader('Authorization', `Token ${TOKEN}`)
                 try {

@@ -21,3 +21,13 @@ class ChatCreateSerializer(serializers.Serializer):
     class Meta:
         model = Chat
         fields = ('name', 'photo', 'description')
+
+
+class UserChatsSerializer(serializers.ModelSerializer):
+    name = serializers.CharField()
+    photo = serializers.ImageField()
+    description = serializers.CharField()
+
+    class Meta:
+        model = Chat
+        fields = ('id', 'name', 'photo', 'description')
