@@ -193,7 +193,8 @@ class LoginPage extends BasePage {
 
 // страница создания чата
 export class ChatCreatePage extends BasePage {
-    page = `<input type='text' id='name'>
+    page = `<a href='#chats'>назад</a>
+            <input type='text' id='name'>
             <br>
             <textarea id='description'></textarea>
             <br>
@@ -202,6 +203,7 @@ export class ChatCreatePage extends BasePage {
             <button id='button'>создать</button>
             <h6 id='error'></h6>`
     other_functions() {
+        hide_navbar()
         let name = document.getElementById('name')
         let description = document.getElementById('description')
         let photo = document.getElementById('photo')
@@ -237,6 +239,39 @@ export class ChatCreatePage extends BasePage {
                 }
             }
         main_page.innerHTML = 'загрузка'
+        }
+    }
+}
+
+// страница для посмотров чатов
+export class ChatsPage extends BasePage {
+    page = `<a href='#chat_create'>создать чат</a>
+            <hr>
+            <div id='chats'></div>`
+    other_functions() {
+        show_navbar()
+        let chats = document.getElementById('chats')
+        
+        // request
+        let request = new XMLHttpRequest()
+        let url = '/api/v1/chats/chats/'
+        request.open('GET', url, true)
+        request.setRequestHeader('Authorization', `Token ${TOKEN}`)
+        try {
+            request.send()
+            request.onload = () => {
+                let chats_json = JSON.parse(request.responseText)
+                for (let chat of chats_json) {
+                    let chat_element = document.createElement('div')
+                    chat_element.innerHTML = `<h4>${chat.name}</h4>`
+                    chats.append(chat_element)
+                }
+            }
+        }
+        catch (err) {
+            request.onerror = (error) => {
+                console.log(error)
+            }
         }
     }
 }
