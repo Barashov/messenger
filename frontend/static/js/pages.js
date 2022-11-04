@@ -191,4 +191,54 @@ class LoginPage extends BasePage {
     }
 }
 
+// страница создания чата
+export class ChatCreatePage extends BasePage {
+    page = `<input type='text' id='name'>
+            <br>
+            <textarea id='description'></textarea>
+            <br>
+            <input type='file' id='photo'>
+            <br>
+            <button id='button'>создать</button>
+            <h6 id='error'></h6>`
+    other_functions() {
+        let name = document.getElementById('name')
+        let description = document.getElementById('description')
+        let photo = document.getElementById('photo')
+        let button = document.getElementById('button')
+        let error = document.getElementById('error')
+        button.onclick = () => {
+            if (name.value == '') {
+                error.textContent = 'название - обязательно поле'
+            }
+            else {
+                let data = new FormData()
+                data.append('name', name.value)
+                if (photo.files[0] != undefined) {
+                    data.append('photo', photo.files[0])
+                }
+                if (description.value != '') {
+                    data.append('description', description.value)
+                }
+                let request = new XMLHttpRequest()
+                let url = '/api/v1/chats/chat/'
+                request.open('POST', url, true)
+                request.setRequestHeader('Authorization', `Token ${TOKEN}`)
+                try {
+                    request.send(data)
+                    request.onload = () => {
+                    console.log(request.status)
+                } 
+                }
+                catch (error) {
+                    request.onerror = (err) => {
+                        console.log(err)
+                    }
+                }
+            }
+        main_page.innerHTML = 'загрузка'
+        }
+    }
+}
+
 export { BasePage, RegistrationPage, ProfilePage, LoginPage }
