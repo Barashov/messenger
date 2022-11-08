@@ -31,3 +31,8 @@ class UserChatsSerializer(serializers.ModelSerializer):
     class Meta:
         model = Chat
         fields = ('id', 'name', 'photo', 'description')
+
+
+class ConnectToChatSerializer(serializers.Serializer):
+    chat = serializers.IntegerField()
+    token = serializers.CharField()

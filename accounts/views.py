@@ -6,7 +6,6 @@ from .serializers import UserSerializer, ProfileSerializer
 from .logics import UserLogic
 
 
-
 class UserCreateView(APIView):
     """
     представление для создания пользователя
