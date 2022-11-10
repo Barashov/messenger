@@ -112,7 +112,7 @@ class RegistrationPage extends BasePage {
                     let json_data = JSON.stringify({
                         'username': username.value,
                         'password': psw_1.value
-                        })
+                    })
                     request.open('POST', 'auth/token/login', true)
                     request.setRequestHeader('Content-type', 'application/json', 'charset=UTF-8')
                     request.send(json_data)
@@ -229,8 +229,8 @@ export class ChatCreatePage extends BasePage {
                 try {
                     request.send(data)
                     request.onload = () => {
-                    console.log(request.status)
-                } 
+                        console.log(request.status)
+                    }
                 }
                 catch (error) {
                     request.onerror = (err) => {
@@ -238,7 +238,7 @@ export class ChatCreatePage extends BasePage {
                     }
                 }
             }
-        main_page.innerHTML = 'загрузка'
+            main_page.innerHTML = 'загрузка'
         }
     }
 }
@@ -251,7 +251,7 @@ export class ChatsPage extends BasePage {
     other_functions() {
         show_navbar()
         let chats = document.getElementById('chats')
-        
+
         // request
         let request = new XMLHttpRequest()
         let url = '/api/v1/chats/chats/'
@@ -265,6 +265,12 @@ export class ChatsPage extends BasePage {
                     let chat_element = document.createElement('div')
                     chat_element.innerHTML = `<h4>${chat.name}</h4>`
                     chats.append(chat_element)
+                    chat_element.addEventListener('click', () => {
+                    
+                        open_chat(chat.id)
+                        
+                    })
+
                 }
             }
         }
@@ -274,6 +280,57 @@ export class ChatsPage extends BasePage {
             }
         }
     }
+}
+
+
+function open_chat(chat_id) {  
+    hide_navbar()
+    main_page.innerHTML = `<div id='messages'>hello</div>
+                           <div class='navbar'>
+                           <input type='text' id='message'>
+                           <button id='button'>отправить</button>
+                           </div>`         
+                           
+    let message_text = document.getElementById('message')
+    let button = document.getElementById('button')
+    var socket
+    try {
+        socket = new WebSocket(`ws://${location.host}/chat/${chat.id}/`)
+        socket.send(JSON.stringify({
+            'token': TOKEN,
+            'message': 'пользователь присоединился к чату'
+        }))
+        console.log('ok')
+    }
+    catch (error) {
+        let request = new XMLHttpRequest()
+        let data = JSON.stringify({
+            'chat': chat_id,
+            'token': TOKEN
+        })
+        request.open('POST', 'api/v1/chats/connect-to-chat/', true)
+        request.setRequestHeader('Authorization', `Token ${TOKEN}`)
+        request.setRequestHeader('Content-type', 'application/json', 'charset=UTF-8')
+        request.send(data)
+        request.onload = () => {
+            console.log(request.status)
+            if (request.status == 200) {
+                socket = new WebSocket(`ws://${location.host}/chat/${chat_id}/`)
+                socket.onmessage = (event) => {
+                    console.log(event.data)
+                }
+            }
+        }
+    }
+    button.onclick = () => {
+        let json_data = JSON.stringify({
+            'token': TOKEN,
+            'message': message_text.value
+        })
+        socket.send(json_data)
+    }
+    
+
 }
 
 export { BasePage, RegistrationPage, ProfilePage, LoginPage }
