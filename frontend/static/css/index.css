@@ -2,6 +2,10 @@
 body {
   background-color: antiquewhite;
   margin: 0;
+  color: #2D2A38;
+  background: linear-gradient(#FFFFFF, #B8A2ED) no-repeat;
+  background-attachment: fixed;
+  font-family: 'Comforta';
 }
 
 .navbar {
@@ -10,5 +14,44 @@ body {
   position: fixed;
   bottom: 0;
   width: 100%;
+}
+.logo {
+  max-width: 200px;
+  margin-top: 75px;
+  
+}
+.text-input  {
+  background: transparent;
+  border-radius: 8px;
+  border: 3px solid #2D2A38;
+  outline: none;
+  width: 225px;
+}
+
+.input-div {
+  height: 55px;
+}
+.center {
+  align-items: center;
+}
+.but {
+  height: 35px;
+  background: transparent;
+  border: #2D2A38 solid 3px;
+  color: #2D2A38;
+  border-radius: 8px;
+  outline: none;
+  margin: auto;
+}
+.main-div {
+  margin-top: 75px;
+}
+.error {
+  
+  margin-bottom: 0px;
+}
+.main-div {
+  margin: auto;
+  width: 225px;
 }
 

@@ -6,7 +6,8 @@ let routers = {
   '#profile': pages.ProfilePage,
   '#login': pages.LoginPage,
   '#chat_create': pages.ChatCreatePage,
-  '#chats': pages.ChatsPage
+  '#chats': pages.ChatsPage,
+  '#start': pages.StartPage,
 }
 
 function hash_change() {

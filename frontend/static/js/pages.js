@@ -20,17 +20,40 @@ class BasePage {
     other_functions() { } // другие функции
 }
 
+export class StartPage extends BasePage {
+    page = `
+    
+    `
+    other_functions() {
+        hide_navbar()
+    }
+}
+
 // страница регистрации
 class RegistrationPage extends BasePage {
-    page = `<input name='username' type='text' id='username' maxlength="20">
-            <h6 id='user_error'></h6>
-            <input name='password' id='psw_1' type='text'>
-            <h6 id='psw_error'></h6>
-            <input type='text' id='psw_2'>
-            <h6 id='error'></h6>
-            <a href='#login'>уже есть аккаунт</a>
-            <br>
-            <button id='submit'>зарегестрироваться</button>`
+    page = `
+    <div class="main-div">
+        <div class="text-center">
+            <img src="static/icons/logo.png" alt="" class="logo">
+        </div>
+        <h4 class="text-center">Регистрация</h4>
+        <div class="input-div">
+            <input type="text" id="username" class="text-input" placeholder="ваше имя">
+            <h6 id="user_error" class="error"></h6>
+        </div>
+        <div class="input-div">
+            <input type="password" id="psw_1" class="text-input" placeholder="пароль">
+            <h6 id="psw_error" class="error"></h6>
+        </div>
+        <div class="input-div">
+            <input type="password" id="psw_2" class="text-input" placeholder="повторите пароль">
+            <h6 id="error" class="error"></h6>
+        </div>
+        <div class="text-center mt-2">
+            <button id="submit" class="but">Зарегестрироваться</button>
+        </div>
+    </div>
+    `
     other_functions() {
         let username = document.getElementById('username')
         let psw_1 = document.getElementById('psw_1')
@@ -47,25 +70,25 @@ class RegistrationPage extends BasePage {
 
         function password_validation() {  // валидация пароля
             if (psw_1.value.length < 6) {
-                psw_error.textContent = 'пароль должен быть длиннее 5 символов'
-                psw_1.style.borderColor = 'red'
+                psw_error.textContent = 'пароль меньше 5 символов'
+                psw_1.style.borderColor = '#FC72A4'
                 password_is_valid = false
             }
             else {
                 psw_error.textContent = ''
-                psw_1.style.borderColor = 'green'
+                psw_1.style.borderColor = '#2D2A38'
                 password_is_valid = true
             }
         }
         function password_matching_check() { // проверка на совпадение пароля
             if (psw_1.value != psw_2.value) {
                 psw_2_error.textContent = 'пароли не совпадают';
-                psw_2.style.borderColor = 'red'
+                psw_2.style.borderColor = '#FC72A4'
                 passwords_match = false
             }
             else {
-                error.textContent = 'все хорошо'
-                psw_2_error.style.borderColor = 'green'
+                error.textContent = ''
+                psw_2.style.borderColor = '#2D2A38'
                 passwords_match = true
             }
         }
@@ -80,13 +103,13 @@ class RegistrationPage extends BasePage {
                     let json_data = JSON.parse(request.responseText)
                     if (json_data.is_username_taken == true) {
                         username_is_valid = false
-                        username.style.borderColor = 'red'
+                        username.style.borderColor = '#FC72A4'
                         username_error.textContent = 'имя занято'
                     }
                     else {
                         username_is_valid = true
-                        username.style.borderColor = 'green'
-                        username_error.textContent = 'все хорошо'
+                        username.style.borderColor = '#2D2A38'
+                        username_error.textContent = ''
                     }
                 }
             }
