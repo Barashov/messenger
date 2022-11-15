@@ -22,10 +22,29 @@ class BasePage {
 
 export class StartPage extends BasePage {
     page = `
-    
+
+    <div class="main-div">
+        <div class="text-center">
+            <img src="static/icons/logo.png" alt="" class="logo">
+        </div>
+        <h2 class="text-center">Общайся с Deal :)</h2>
+        <div class="text-center mt-3">
+            <button id='reg' class="but mb-2 w-100">Зарегестрироваться</button>
+            <br>
+            <button id='log' class="but w-100">Уже есть аккаунт</button>
+        </div> 
+    </div>
     `
     other_functions() {
         hide_navbar()
+        let reg = document.getElementById('reg')
+        reg.onclick = () => {
+            location.hash = 'registration'
+        }
+        let log = document.getElementById('log')
+        log.onclick = () => {
+            location.hash = 'login'
+        }
     }
 }
 
