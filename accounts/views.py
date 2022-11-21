@@ -2,8 +2,11 @@ from django.contrib.auth import authenticate, login
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from .serializers import UserSerializer, ProfileSerializer
-from .logics import UserLogic
+import secrets
+
+from .serializers import *
+from .logics import UserLogic, EmailLogic
+from .tasks import send_token
 
 
 class UserCreateView(APIView):
@@ -52,3 +55,33 @@ class LoginView(APIView):
                 return Response(status=200)
             return Response(status=409)
         return Response(status=400)
+
+
+class RequestToAddEmailView(APIView):
+    def post(self, request):
+        serializer = EmailAddSerializer(data=request.data)
+        if serializer.is_valid():
+
+            user = request.user
+            email = serializer.validated_data['email']
+            random_token = secrets.token_hex(8)
+            EmailLogic.add_email_token_to_user(user_id=user.id,
+                                               email=email,
+                                               token=random_token)
+            send_token.delay(email, random_token)
+            return Response(200)
+        return Response(400)
+
+
+class AddEmailView(APIView):
+    def post(self, request):
+        serializer = TokenSerializer(data=request.data)
+        if serializer.is_valid():
+            user = request.user
+            token = serializer.validated_data['token']
+            is_token_validate = EmailLogic.is_token_validate(user.pk, token)
+            if is_token_validate:
+                EmailLogic.add_email_to_user(user=user)
+                return Response(200)
+            return Response(403)
+        return Response(400)
