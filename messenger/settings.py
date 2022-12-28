@@ -44,7 +44,8 @@ INSTALLED_APPS = [
     'rest_framework',
     'channels',
     'djoser',
-    'rest_framework.authtoken'
+    'rest_framework.authtoken',
+    'drf_yasg'
 ]
 
 MY_APPS = [

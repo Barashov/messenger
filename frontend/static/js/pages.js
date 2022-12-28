@@ -187,6 +187,7 @@ class ProfilePage extends BasePage {
         request.send()
         request.onload = (event) => {
             let json_data = JSON.parse(request.responseText) // данные профиля
+            console.log(json_data)
             main_page.innerHTML = `username: ${json_data.username}
                                     <br>
                                    <img src="${json_data.photo}" alt="Italian Trulli">`
@@ -199,16 +200,30 @@ class ProfilePage extends BasePage {
 
 // страница входа 
 class LoginPage extends BasePage {
-    page = `<input type='text' id='username' maxlength="20">
-            <br>
-            <input type='password' id='psw'>
-            <br>
-            <button id='btn'>Войти</button>`
+    page = `
+    <div class="main-div">
+        <div class="text-center">
+            <img src="static/icons/logo.png" alt="" class="logo">
+        </div>
+        <h1 class="text-center">Вход</h1>
+        <div class="input-div">
+            <input type="text" class="text-input" id="username" placeholder="Ваше имя">
+        </div>
+        <div class="input-div">
+            <input type="text" class="text-input" id="psw" placeholder="Пароль">
+             <h6 class="error" id='error'></h6>
+        </div>
+        <div class="text-center">
+            <button id="btn" class="but mt-3 w-100">Войти</button>
+        </div>
+    </div>
+    `
     other_functions() {
         hide_navbar()
         let username = document.getElementById('username')
         let password = document.getElementById('psw')
         let button = document.getElementById('btn')
+        let error = document.getElementById('error')
         button.onclick = () => {
             let request = new XMLHttpRequest()
             let json_data = JSON.stringify({
@@ -220,7 +235,8 @@ class LoginPage extends BasePage {
             request.send(json_data)
             request.onload = () => {
                 if (request.status == 400) {
-                    console.log('неправильный логин или пароль')
+                    error.textContent = 'неправильный логин или пароль'
+                    error.style.color = '#FC72A4'
                 }
                 else if (request.status == 200) {
                     let json_token = JSON.parse(request.responseText)
