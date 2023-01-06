@@ -16,8 +16,10 @@ class ChatView(APIView):
     parser_classes = (MultiPartParser, )
 
     def get(self, request):
-        user = request.user
-        chats = Chat.objects.filter(users=user)
+        """
+        получение списка чатов пользователя
+        """
+        chats = ChatLogic.get_user_chats(request.user)
         serializer = UserChatsSerializer(chats, many=True)
         return Response(status=200, data=serializer.data)
 

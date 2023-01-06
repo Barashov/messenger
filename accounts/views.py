@@ -61,7 +61,6 @@ class RequestToAddEmailView(APIView):
     def post(self, request):
         serializer = EmailAddSerializer(data=request.data)
         if serializer.is_valid():
-
             user = request.user
             email = serializer.validated_data['email']
             random_token = secrets.token_hex(8)

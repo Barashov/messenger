@@ -148,7 +148,7 @@ CHANNEL_LAYERS = {
 }
 
 # redis settings
-HOST = '127.0.0.1'
+HOST = 'redis'
 PORT = 6379
 
 redis = Redis(host=HOST, port=PORT)

@@ -19,6 +19,10 @@ class MessageLogic:
 
 class ChatLogic:
     @classmethod
+    def get_user_chats(cls, user: User):
+        return Chat.objects.filter(users=user)
+    
+    @classmethod
     def add_user_to_chat(cls, user: User, chat: Chat):
         try:
             chat.users.add(user)
