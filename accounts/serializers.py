@@ -40,3 +40,11 @@ class ProfileSerializer(serializers.Serializer):
     class Meta:
         model = User
         fields = ('username', 'photo', 'friends', 'phone_number')
+
+
+class EmailAddSerializer(serializers.Serializer):
+    email = serializers.EmailField()
+
+
+class TokenSerializer(serializers.Serializer):
+    token = serializers.CharField()
