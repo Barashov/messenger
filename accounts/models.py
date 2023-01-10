@@ -14,7 +14,7 @@ class User(AbstractUser):
     is_phone_number_hidden = models.BooleanField(verbose_name='номер спрятан?',
                                                  default=False)
     photo = models.FileField(upload_to='users_photos/',
-                             default='')
+                             default='users_photos/avatar.jpg')
 
     def __str__(self):
         return self.username

@@ -133,7 +133,7 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 MEDIA_URL = '/media/'
-MEDIA_ROOT = BASE_DIR / 'media'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
@@ -163,3 +163,13 @@ EMAIL_PORT = 587
 CELERY_BROKER_URL = f'redis://{HOST}:{PORT}'
 CELERY_BROKER_BACKEND = f'redis://{HOST}:{PORT}'
 BROKER_TRANSPORT_OPTIONS = {'visibility_timeout': 3600}
+
+
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels_redis.core.RedisChannelLayer",
+        "CONFIG": {
+            "hosts": [(HOST, PORT)],
+        },
+    },
+}

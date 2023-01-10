@@ -7,9 +7,14 @@ services:
     ports:
       - 8000:8000
     command: >
-       python manage.py runserver 0.0.0.0:8000
+       bash startapp.sh
     depends_on:
       - redis
+    volumes:
+      - .:/app/code
+      - static:/app/code/static/
+      - media:/app/code/media
+      
   redis:
     image: redis:alpine
   celery:
@@ -21,3 +26,16 @@ services:
     depends_on:
       - redis
       - app
+  nginx: 
+    build: ./nginx
+    volumes:
+      - static:/app/code/static
+      - media:/app/code/media
+    depends_on:
+      - app
+    ports:
+      - 80:80
+volumes:
+  static:
+  media:
+
